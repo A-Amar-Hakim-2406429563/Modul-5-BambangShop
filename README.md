@@ -77,15 +77,13 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
-1. 
-Menurut aku, di kasus BambangShop ini sebenarnya nggak wajib pakai interface (trait) untuk Subscriber. Soalnya, di implementasi sekarang, Subscriber cuma berisi data sederhana seperti url dan name, dan behavior nya juga blom kompleks atau bervariasi gitu.
+1. Menurut aku, di kasus BambangShop ini sebenarnya nggak wajib pakai interface (trait) untuk Subscriber. Soalnya, di implementasi sekarang, Subscriber cuma berisi data sederhana seperti url dan name, dan behavior nya juga blom kompleks atau bervariasi gitu.
 
 Kalau di teori Observer Pattern, Subscriber dibuat sebagai interface supaya fleksibel (bisa bnyk jenis subscriber dengan behavior berbeda). Tapi di kasus ini, semua subscriber "berperilaku sama", yaitu menerima notifikasi lewat HTTP request. Jadi, pakai satu struct Subscriber aja sudah cukup.
 
 Tapi kalau ke depannya ada banyak jenis subscriber dengan cara menerima notifikasi yang berbeda-beda, baru deh trait bisa dipakai supaya lebih fleksibel dan sesuai prinsip Open-Closed.
 
-2. 
-Menurut aku, penggunaan Vec sebenarnya kurang cocok untuk kasus ini. Soalnya id di Program dan url di Subscriber itu harus unik.
+2. Menurut aku, penggunaan Vec sebenarnya kurang cocok untuk kasus ini. Soalnya id di Program dan url di Subscriber itu harus unik.
 
 Kalau pakai Vec, kita bakal harus:
 - ngecek manual apakah data sudah ada atau belum
@@ -98,8 +96,7 @@ Sedangkan kalau pakai DashMap (atau HashMap):
 
 Jadi menurut aku, penggunaan DashMap itu lebih tepat dan efisien dibanding Vec untuk kasus ini.
 
-3. 
-Menurut aku, Singleton dan DashMap itu beda tujuan, jadi nggak bisa saling menggantikan.
+3. Menurut aku, Singleton dan DashMap itu beda tujuan, jadi nggak bisa saling menggantikan.
 
 - Singleton --> memastikan cuma ada satu instance (misalnya satu database global)
 - DashMap --> memastikan data bisa diakses secara thread-safe
