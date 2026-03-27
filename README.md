@@ -77,6 +77,40 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+1. 
+Menurut aku, di kasus BambangShop ini sebenarnya nggak wajib pakai interface (trait) untuk Subscriber. Soalnya, di implementasi sekarang, Subscriber cuma berisi data sederhana seperti url dan name, dan behavior nya juga blom kompleks atau bervariasi gitu.
+
+Kalau di teori Observer Pattern, Subscriber dibuat sebagai interface supaya fleksibel (bisa bnyk jenis subscriber dengan behavior berbeda). Tapi di kasus ini, semua subscriber "berperilaku sama", yaitu menerima notifikasi lewat HTTP request. Jadi, pakai satu struct Subscriber aja sudah cukup.
+
+Tapi kalau ke depannya ada banyak jenis subscriber dengan cara menerima notifikasi yang berbeda-beda, baru deh trait bisa dipakai supaya lebih fleksibel dan sesuai prinsip Open-Closed.
+
+2. 
+Menurut aku, penggunaan Vec sebenarnya kurang cocok untuk kasus ini. Soalnya id di Program dan url di Subscriber itu harus unik.
+
+Kalau pakai Vec, kita bakal harus:
+- ngecek manual apakah data sudah ada atau belum
+- pencarian jadi lebih lambat (O(n))
+
+Sedangkan kalau pakai DashMap (atau HashMap):
+- key langsung unik (otomatis enforce uniqueness)
+- akses data lebih cepat (O(1))
+- lebih efisien untuk operasi add, delete, dan lookup
+
+Jadi menurut aku, penggunaan DashMap itu lebih tepat dan efisien dibanding Vec untuk kasus ini.
+
+3. 
+Menurut aku, Singleton dan DashMap itu beda tujuan, jadi nggak bisa saling menggantikan.
+
+- Singleton --> memastikan cuma ada satu instance (misalnya satu database global)
+- DashMap --> memastikan data bisa diakses secara thread-safe
+
+Di kasus ini, kita memang butuh:
+- Satu instance global (sudah dipenuhi dengan lazy_static, mirip Singleton)
+- Thread-safe access (ini yang dipenuhi oleh DashMap)
+
+Jadi walaupun kita pakai konsep Singleton, tetap butuh DashMap untuk handle concurrency. Kalau cuma pakai Singleton tanpa DashMap, bisa terjadi race condition saat banyak request masuk bersamaan.
+
+Kesimpulannya, kita tetap butuh DashMap, dan Singleton saja tidak cukup.
 
 #### Reflection Publisher-2
 
