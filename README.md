@@ -110,5 +110,61 @@ Jadi walaupun kita pakai konsep Singleton, tetap butuh DashMap untuk handle conc
 Kesimpulannya, kita tetap butuh DashMap, dan Singleton saja tidak cukup.
 
 #### Reflection Publisher-2
+1. Menurut aku, walaupun di konsep MVC klasik itu Model nya mencakup data + logic, tapi di praktik modern kita sekarang ini itu biasanya memisahkan Service dan Repository dari Model supaya kode nya itu jadi lebih rapi dan mudah dikelola gitu.
+
+Kalau semua logic dimasukin ke Model, nanti Model jadi terlalu "gemuk" (fat model) gitu, isinya campur antara:
+- struktur data
+- logic bisnis
+- akses database
+
+Dengan dipisah:
+- Model --> cuma representasi data
+- Repository --> fokus ke data storage (CRUD)
+- Service --> fokus ke business logic
+
+Ini sesuai dengan prinsip Single Responsibility Principle, jadi tiap bagian punya tanggung jawab yang jelas. Selain itu, jadi lebih mudah untuk testing, maintenance, dan kalau mau ganti implementasi (misalnya ganti database), gak perlu ubah semua bagian.
+
+2. Kalau kita cuman pake Model doang, menurut aku kode nya bakal jadi lebih kompleks dan susah di maintain.
+
+Misalnya:
+- Program harus tahu cara kirim notifikasi
+- Subscriber harus tahu cara subscribe/unsubscribe
+- Notification harus tahu cara akses database dan kirim request
+
+Akhirnya semua model jadi saling bergantung satu sama lain (tight coupling). Kalau ada perubahan di satu model, bisa berdampak ke banyak model lain.
+
+Selain itu:
+- logic jadi tersebar dan campur aduk
+- susah dibaca
+- susah debug
+
+Dengan adanya Service dan Repository ini itu, interaksi antar model nya bakal jadi lebih terstruktur:
+
+Controller --> Service --> Repository --> Model
+
+Jadi tiap bagian itu punya peran yg jelas dan gk saling "overlap" gituu.
+
+3. Menurut aku, Postman ini itu sangat membantu banget buat ngetes API yg lagi aku buat.
+
+Dengan Postman, aku bisa:
+- kirim request HTTP (GET, POST, dll)
+- ngirim body JSON dgn mudah
+- lihat response langsung tanpa perlu frontend
+
+Untuk project ini, Postman membantu aku buat:
+- test endpoint /notification/subscribe
+- test /unsubscribe
+- memastikan API udh jalan sesuai yg diharapkan
+
+Fitur Postman yg menurut aku paling berguna:
+- Collection --> bisa simpan semua endpoint jadi rapi
+- Environment variables --> bisa ganti base URL (localhost, dll)
+- Pretty JSON viewer --> response jadi lebih mudah dibaca
+- Save request --> gk perlu ngetik ulang terus
+
+Ke depannya, menurut aku Postman bakal sangat kepakai di:
+- group project
+- testing API sebelum frontend jadi
+- debugging kalau ada error di backend
 
 #### Reflection Publisher-3
