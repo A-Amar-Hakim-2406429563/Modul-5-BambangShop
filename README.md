@@ -168,3 +168,48 @@ Ke depannya, menurut aku Postman bakal sangat kepakai di:
 - debugging kalau ada error di backend
 
 #### Reflection Publisher-3
+1. Menurut aku, di tutorial ini kita bakal pakai Push Model.
+
+Soalnya, dari implementasinya kelihatan kalau publisher (BambangShop) langsung ngirim data notifikasi ke subscriber lewat HTTP POST. Jadi subscriber gk perlu minta data sendiri, tapi langsung "didorong" (push) oleh publisher setiap ada event seperti create, delete, atau promotion.
+
+2. Kalau kita bayangin pakai Pull Model gituu, artinya subscriber itu harus ambil data sendiri dari publisher nya (misalnya nge request API secara berkala gitu).
+
+Menurut aku:
+
+Kelebihan Pull Model:
+- Lebih fleksibel --> subscriber bisa ambil data sesuai kebutuhan
+- Publisher jadi lebih sederhana (gak perlu kirim ke semua subscriber)
+- Bisa mengurangi beban publisher kalau subscriber banyak
+
+Kekurangan Pull Model:
+- Tidak real-time --> harus polling (ngecek berkala)
+- Lebih boros resource di subscriber (karena request terus-menerus)
+- Implementasi lebih ribet (harus handle kapan fetch, caching, dll)
+
+Sedangkan di kasus ini, menurut aku Push Model lebih cocok karena:
+- Notifikasi jadi langsung (real time)
+- Lebih simpel implementasinya
+- Cocok untuk event-based system kayak ini
+
+3. Kalau kita tidak pakai multi-threading, menurut aku program bakal jadi lebih lambat dan kurang efisien.
+
+Soalnya sekarang setiap notifikasi dikirim pakai:
+- thread::spawn(...)
+
+Artinya:
+- tiap subscriber dikirim notif secara paralel
+
+Kalau tanpa multi-threading:
+- notifikasi dikirim satu per satu (sequential)
+- kalau ada banyak subscriber, bakal lamaa banget
+- kalau satu subscriber lambat (misalnya server down), semua proses ikut ke block
+
+Dampaknya:
+- response API jadi lebih lama
+- performa turun
+- user experience jadi jelek
+
+Jadi menurut aku, multi-threading di sini itu penting supaya:
+- pengiriman notif bisa paralel
+- lebih cepat
+- tidak blocking proses utama
